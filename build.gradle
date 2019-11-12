@@ -1,0 +1,91 @@
+plugins {
+    id 'application'
+    id 'scala'
+}
+
+
+sourceSets {
+    main {
+        scala  { srcDirs = ['src/'] }
+    }
+}
+
+
+repositories { jcenter() }
+
+
+dependencies {
+    implementation 'org.scala-lang:scala-dist:2.13.1'
+    implementation 'com.chuusai:shapeless_2.13:2.3.3'
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation 'com.github.pathikrit:better-files_2.13:3.8.0'
+    implementation 'org.scala-lang.modules:scala-parser-combinators_2.13:1.1.2'
+
+    // Unit tests
+    testImplementation 'org.pegdown:pegdown:1.4.2'
+    testImplementation 'org.scalatest:scalatest_2.13:3.0.8'
+    testImplementation 'org.scalactic:scalactic_2.13:3.0.8'
+}
+
+
+compileScala {
+    scalaCompileOptions.setAdditionalParameters([
+        "-Xlint",  // warns about unsed imports among other things
+        "-feature",
+        "-language:dynamics",
+        "-language:higherKinds",
+        "-language:implicitConversions",
+        "-language:reflectiveCalls",
+        "-language:existentials"
+    ])
+}
+
+File mkfile(obj) { obj instanceof File ? obj : new File(obj.toString()) }
+def getjopts() {
+    def f = mkfile(projectDir.absolutePath + "/.java")
+    if (f.exists()){ f.text.split("\n").toList() }else{ [] }
+}
+
+
+application {
+    applicationDefaultJvmArgs = getjopts()
+    mainClassName 'zsh.history.Main'
+}
+
+task runMain(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'Main'
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+task makeScripts(type: DefaultTask) {
+    String shebang = "#! /usr/bin/env sh\n"
+    String root = projectDir.absolutePath
+    String pre = ""
+    File outFile
+
+    String classpath = sourceSets.main.runtimeClasspath.toList()*.toString().join(":")
+
+    try {
+        String opts = mkfile(root + "/.java").text.split("\n").join(" ")
+        pre += "\nexport JAVA_OPTS='$opts'\n\n"
+    }
+    catch(_){}
+    outFile = mkfile("-scala")
+    outFile.write shebang + pre + "scala -classpath ${classpath}\n"
+    outFile.setExecutable(true, true)
+
+    outFile = mkfile("-amm")
+    outFile.write shebang + pre + "java -cp ${classpath}:/usr/local/bin/amm ammonite.Main\n"
+    outFile.setExecutable(true, true)
+
+    outFile = mkfile("-jshell")
+    outFile.write shebang + pre + "jshell --class-path ${classpath}\n"
+    outFile.setExecutable(true, true)
+}

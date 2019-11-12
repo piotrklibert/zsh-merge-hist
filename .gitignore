@@ -1,0 +1,8 @@
+build
+.metals
+hist
+.bloop
+.gradle
+-*
+unmetafy
+unmetafy.o
