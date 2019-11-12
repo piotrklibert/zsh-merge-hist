@@ -4,12 +4,8 @@ import scala.util.Using
 import scala.util.parsing.combinator._
 
 object Parsing {
-
   object SimpleParser extends RegexParsers {
     override def skipWhitespace = false
-
-    type S[+T] = Success[T]
-    val S = Success
 
     def nl = "\n"
     def semi = ";"
@@ -20,22 +16,26 @@ object Parsing {
     def start = nl ~ colon
     def elapsed = digits <~ semi
     def timestamp = start ~> " " ~> digits <~ colon
+    def command = ( noNewLine | (not(start) ~> nl) ).+ <~ guard(start)
 
-    def head = timestamp ~ elapsed
-    def tail = ( noNewLine | (not(start) ~> nl) ).+ <~ guard(start)
-
-    def line = head ~ tail ^^ { case a ~ b ~ c => (a.toLong, b.toInt, c.mkString.trim) }
+    def line = timestamp ~ elapsed ~ command ^^ {
+      case ts ~ el ~ cmd => (ts.toLong, el.toInt, cmd.mkString.trim)
+    }
 
     def lines = line.+
+
+    type Success_[+T] = Success[T]
+    val Success_ = Success
   }
 
-  type Success[+T] = SimpleParser.S[T]
-  val Success = SimpleParser.S
+  type Success[+T] = SimpleParser.Success_[T]
+  val Success = SimpleParser.Success_
 
   import SimpleParser.{parse, lines}
   def normalize(s: String) = "\n" + s + "\n:"
   def parseHistory(s: String) = parse(lines, normalize(s))
 }
+
 
 object Dumping {
   def dumpResults(res: List[(Long, Int, String)]) = {
@@ -49,16 +49,13 @@ object Dumping {
   }
 }
 
+
 object Main extends App {
   import scala.io.Source
   import Parsing.{Success, parseHistory}
   import Dumping.dumpResults
 
   val input = Source.stdin.mkString
-
-  val Success(parseResult, _) = parseHistory(input): @unchecked
-
-  val res = parseResult.sortBy(_._1).distinct
-
-  dumpResults(res)
+  val Success(lines, _) = parseHistory(input): @unchecked
+  dumpResults(lines.sortBy(_._1).distinct)
 }
