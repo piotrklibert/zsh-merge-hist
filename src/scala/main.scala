@@ -1,61 +1,62 @@
 package zsh.history
 
-import scala.util.Using
-import scala.util.parsing.combinator._
+import scalaz.Scalaz._
 
-object Parsing {
-  object SimpleParser extends RegexParsers {
-    override def skipWhitespace = false
 
-    def nl = "\n"
-    def semi = ";"
-    def colon = ":"
-    def digits = "[0-9]+".r
-    def noNewLine = "[^\n]+".r
+object Transfer {
+  import scala.sys.process._
+  import better.files._
+  import Configuration.config
 
-    def start = nl ~ colon
-    def elapsed = digits <~ semi
-    def timestamp = start ~> " " ~> digits <~ colon
-    def command = ( noNewLine | (not(start) ~> nl) ).+ <~ guard(start)
-
-    def line = timestamp ~ elapsed ~ command ^^ {
-      case ts ~ el ~ cmd => (ts.toLong, el.toInt, cmd.mkString.trim)
+  def downloadHistFiles(): List[File] = {
+    val dir = File(config.tempDir)
+    if (!dir.exists) dir.createDirectory
+    val histFiles = for (host <- config.hosts) yield {
+      println(s"Transfer $host:${config.sourcePath} to ${config.tempDir}/${host}_hist")
+      val (from, to) = (s"$host:${config.sourcePath}", config.fmtDest(host))
+      (s"scp $from $to".!)
+      File(to)
     }
-
-    def lines = line.+
-
-    type Success_[+T] = Success[T]
-    val Success_ = Success
+    histFiles.toList
+  } ensuring { files =>
+    (files.length == config.hosts.length) && files.map(_.exists).fold(true)(_ && _)
   }
 
-  type Success[+T] = SimpleParser.Success_[T]
-  val Success = SimpleParser.Success_
-
-  import SimpleParser.{parse, lines}
-  def normalize(s: String) = "\n" + s + "\n:"
-  def parseHistory(s: String) = parse(lines, normalize(s))
+  def uploadMergedHist() = {
+    for (host <- config.hosts) {
+      val dest = config.fmtDest("merged")
+      println(s"Transfer ${dest} to $host:${config.sourcePath}")
+      s"scp ${dest} $host:${config.sourcePath}".!
+    }
+  }
 }
 
 
-object Dumping {
-  def dumpResults(res: List[(Long, Int, String)]) = {
-    Using.resource(System.out) { out =>
-      for( (ts, elapsed, command) <- res ) {
-        // val date = new java.util.Date(ts*1000)
-        // System.err.write((date.toString+"\n").getBytes)
-        out.write(s": $ts:$elapsed;$command\n".getBytes("UTF-8"))
+object Transform {
+  import better.files._
+  import Parsing.ResultData
+  import Configuration.config
+
+  def removeDuplicates(lines: ResultData): ResultData =
+    lines.sortBy(_._1).distinct // TODO: change to distinctBy(_._3) and fix the tests
+
+  def processHistFiles(): ResultData = {
+    val parsedFiles: List[ResultData] =
+      for(host <- config.hosts) yield {
+        val dest = config.fmtDest(host)
+        println(s"Parsing ${dest}...")
+        val inputString = Unmetafy.unmetafy(File(dest))
+        val Right(parsed) = Parsing.parseHistory(inputString): @unchecked
+        parsed
       }
-    }
+
+    List.concat(parsedFiles: _*) |> removeDuplicates
   }
 }
 
 
 object Main extends App {
-  import scala.io.Source
-  import Parsing.{Success, parseHistory}
-  import Dumping.dumpResults
-
-  val input = Source.stdin.mkString
-  val Success(lines, _) = parseHistory(input): @unchecked
-  dumpResults(lines.sortBy(_._1).distinct)
+  Transfer.downloadHistFiles()
+  Dumping.dumpResultsToFile(Transform.processHistFiles())
+  Transfer.uploadMergedHist()
 }
