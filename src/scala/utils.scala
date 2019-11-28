@@ -12,6 +12,10 @@ object Storage {
 }
 
 
+/** This object provides a service of diffing two collections (Lists) of
+  * Strings. The results are printed in a table, formatted as markdown. It is
+  * useful for debugging, especially around Unmetafy.
+  */
 object diff {
   import com.github.difflib._  // from io.github.java-diff-utils:java-diff-utils:4.4
   import text._

@@ -1,6 +1,6 @@
 package zsh.history
 
-import scalaz.Scalaz._
+import scalaz.Scalaz._ // for the |> operator
 
 
 object Transfer {
