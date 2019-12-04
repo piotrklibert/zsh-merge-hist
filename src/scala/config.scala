@@ -9,8 +9,16 @@ case class Configuration(
   val tempDir: String = "./tmp/",
   val sourcePath: String = "~/.zsh_history",
 ) {
-  def fmtDest(host: String) =
+  import better.files.File
+
+  def getPathForHost(host: String) =
     s"${tempDir}/${host}_hist"
+
+  def createDir() = {
+    val dir = File(tempDir)
+    if (!dir.exists) { dir.createDirectory }
+    dir
+  }
 }
 
 

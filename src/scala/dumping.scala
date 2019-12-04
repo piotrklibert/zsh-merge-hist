@@ -21,7 +21,7 @@ object Dumping {
     dumpResults(res)
 
   def dumpResultsToFile(res: ResultData): Unit =
-    dumpResultsToFile(res, config.fmtDest("merged"))
+    dumpResultsToFile(res, config.getPathForHost("merged"))
 
   def dumpResultsToFile(res: ResultData, path: String): Unit = {
     println(s"Dumping parsed data to ${path}")

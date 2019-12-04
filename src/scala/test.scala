@@ -85,7 +85,7 @@ class TestSSH extends FunSuite {
     Transfer.downloadHistFiles()
     Dumping.dumpResultsToFile(Transform.processHistFiles())
     assert(File(config.tempDir).list.length == config.hosts.length + 1)
-    assert(File(config.fmtDest("merged")).exists)
+    assert(File(config.getPathForHost("merged")).exists)
   }
 
 
