@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.9'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'org.scala-lang.modules:scala-parser-combinators_2.13:1.1.2'
+    implementation 'org.scala-lang.modules:scala-parallel-collections_2.13:0.2.0'
     implementation 'org.scala-lang:scala-dist:2.13.1'
     implementation 'org.scalaz:scalaz-core_2.13:7.3.0-M31'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
