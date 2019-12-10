@@ -6,10 +6,23 @@ object Storage {
   import Configuration.config
 
   def clearDestDir(): Unit = {
-    println("Clearing temp dir...")
+    // println("Clearing temp dir...")
     File(config.tempDir).list.foreach(_.delete(false))
   }
 }
+
+
+object Switch {
+  val T = new Switch(Some(true))
+  val F = new Switch(Some(false))
+  val N = new Switch(None)
+
+  implicit def booleanToSwitch(b: Boolean) = new Switch(Some(b))
+  implicit def nullToSwitch(b: Null) = new Switch(None)
+  implicit def switchToBoolean(s: Switch): Boolean = if (s == T) true else false
+}
+
+class Switch(value: Option[Boolean])
 
 
 /** This object provides a service of diffing two collections (Lists) of
