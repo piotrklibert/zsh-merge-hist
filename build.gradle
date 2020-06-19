@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    // id 'groovy'
     id 'scala'
     id 'com.github.maiflai.scalatest' version '0.25'
 }
@@ -50,6 +51,17 @@ dependencies {
 }
 
 
+// https://github.com/gradle/gradle/issues/2311
+// https://github.com/gradle/gradle/issues/2312
+// TLDR: they broke interop and are not very keen on fixing it...
+// another workaround: sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
+// compileGroovy {
+//     // make Groovy compile after Scala by default
+//     dependsOn compileScala
+//     classpath = classpath.plus(files(compileScala.destinationDir))
+// }
+
+
 compileScala {
     // classpath = classpath.plus(files(compileGroovy.destinationDir))
     scalaCompileOptions.setAdditionalParameters([
@@ -74,6 +86,38 @@ test {
     maxParallelForks = 1
 }
 
+// compileScala {
+//     scalaCompileOptions.setAdditionalParameters([
+//         "-Xlint",  // warns about unsed imports among other things
+//         "-feature",
+//         "-language:dynamics",
+//         "-language:higherKinds",
+//         "-language:implicitConversions",
+//         "-language:reflectiveCalls",
+//         "-language:existentials"
+//     ])
+// }
+
+// File mkfile(obj) { obj instanceof File ? obj : new File(obj.toString()) }
+// def getjopts() {
+//     def f = mkfile(projectDir.absolutePath + "/.java")
+//     if (f.exists()){ f.text.split("\n").toList() }else{ [] }
+// }
+
+
+// application {
+//     applicationDefaultJvmArgs = getjopts()
+//     mainClassName 'zsh.history.Main'
+// }
+
+// task runMain(type: JavaExec) {
+//     classpath = sourceSets.main.runtimeClasspath
+//     main = 'Main'
+// }
+
+test {
+    maxParallelForks = 1
+}
 
 tasks.build.dependsOn 'makeScripts'
 
