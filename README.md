@@ -30,11 +30,11 @@ servers.
 One of the peculiarities of the history file format is that it encodes
 characters outside of the `latin1` encoding with a special character called
 `Meta` with the value of `0x83` (`134` in decimal). See
-[the C implementation](/piotrklibert/zsh-merge-hist/blob/master/unmetafy/unmetafy.c)
-of the escaping logic (taken from ZSH source). Unfortunately, ignoring the issue
-and copying the `Meta` char along with the command text doesn't work, because it
-makes for invalid UTF8, which is problematic when dumping the data back to file.
-So I had to reimplement the escaping and unescaping logic as part of the app,
-[in Scala](/piotrklibert/zsh-merge-hist/blob/master/src/scala/unmetafy.scala).
-I believe that implementation is easier to understand due to pattern matching,
-but anyway - it works, so it's all good! ☺
+[the C implementation](/unmetafy/unmetafy.c) of the escaping logic (taken from
+ZSH source). Unfortunately, ignoring the issue and copying the `Meta` char along
+with the command text doesn't work, because it makes for invalid UTF8, which is
+problematic when dumping the data back to file. So I had to reimplement the
+escaping and unescaping logic as part of the app,
+[in Scala](/src/scala/unmetafy.scala). I believe that implementation is easier
+to understand due to pattern matching, but anyway - it works, so it's all good!
+☺
