@@ -88,7 +88,6 @@ task makeScripts(type: DefaultTask) {
     File outFile
 
     String classpath = sourceSets.main.runtimeClasspath.toList()*.toString().join(":")
-
     try {
         String opts = mkfile(root + "/.java").text.split("\n").join(" ")
         pre += "\nexport JAVA_OPTS='$opts'\n\n"
@@ -102,7 +101,12 @@ task makeScripts(type: DefaultTask) {
     outFile.write shebang + pre + "java -cp ${classpath}:/usr/local/bin/amm ammonite.Main\n"
     outFile.setExecutable(true, true)
 
+    ArrayList<String> jshell_cp = classpath.split(":").findAll({
+        // TODO: filter out all nonexistent dirs, not just the blaclisted ones
+        !(it.contains("build/classes/java/main") || it.contains("build/resources/main"))
+    })
+    // jshell_cp.each({println it})
     outFile = mkfile("-jshell")
-    outFile.write shebang + pre + "jshell --class-path ${classpath}\n"
+    outFile.write shebang + pre + "jshell --class-path ${jshell_cp.join(':')}\n"
     outFile.setExecutable(true, true)
 }
