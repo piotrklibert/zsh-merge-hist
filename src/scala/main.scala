@@ -1,5 +1,7 @@
 package zsh.history
 
+import scala.collection.parallel.CollectionConverters._
+
 
 object Transform {
   import better.files.File
@@ -20,15 +22,15 @@ object Transform {
     processHistoryFiles(files.map(File(_)))
 
   def processHistoryFiles(files: List[File]): ResultData = {
-    val parsedFiles: List[ResultData] =
-      for (dest <- files) yield {
+    val parsedFiles =
+      files.par.map({ dest =>
         println(s"Parsing ${dest}...")
         val inputString = Unmetafy.unmetafy(dest)
         val Right(parsed) = Parsing.parseHistory(inputString): @unchecked
         parsed
-      }
+      })
 
-    distinct(removeDuplicates(List.concat(parsedFiles: _*)))
+    distinct(removeDuplicates(List.concat(parsedFiles.toList: _*)))
   }
 }
 

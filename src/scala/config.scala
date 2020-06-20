@@ -42,6 +42,7 @@ object Configuration {
 
   val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
+
   def loadConfig =
     mapper.readValue(settingsFile.toJava, classOf[Configuration])
 
