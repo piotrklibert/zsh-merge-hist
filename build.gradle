@@ -93,6 +93,7 @@ task makeScripts(type: DefaultTask) {
         pre += "\nexport JAVA_OPTS='$opts'\n\n"
     }
     catch(_){}
+
     outFile = mkfile("-scala")
     outFile.write shebang + pre + "scala -classpath ${classpath}\n"
     outFile.setExecutable(true, true)
@@ -102,7 +103,7 @@ task makeScripts(type: DefaultTask) {
     outFile.setExecutable(true, true)
 
     ArrayList<String> jshell_cp = classpath.split(":").findAll({
-        // TODO: filter out all nonexistent dirs, not just the blaclisted ones
+        // TODO: filter out all nonexistent dirs, not just the blacklisted ones
         !(it.contains("build/classes/java/main") || it.contains("build/resources/main"))
     })
     // jshell_cp.each({println it})

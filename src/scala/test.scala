@@ -33,7 +33,6 @@ class TestMerging extends FunSuite {
     val noDups = removeDuplicates(lst)
     assert(noDups.length == 20150)
     assert(input == dumpResultsAsString(noDups))
-
   }
 
   test("test removing duplicates in history") {
@@ -53,7 +52,6 @@ class TestMerging extends FunSuite {
     assert(sanitized.length == 20151)
     assert(sanitized(0) != parsed(0))
   }
-
 
   test("test merging two files 2") {
     val row = Dumping.renderLine(timestamp, 12, "some command")
@@ -98,7 +96,6 @@ class TestMerging extends FunSuite {
     }
   }
   ignore("some stuff") {
-
     // import Dumping.renderLine
     // val render = (renderLine _).tupled
     // println("here1")
@@ -120,13 +117,10 @@ class TestUnmetafy extends FunSuite {
   import better.files._
 
   test("unmetafying simple array") {
-    val bb = Array(100, 105, 99, 116, 32, 39, 111, 98, 114, 97, 122, 105, 196, 131, 167, 32, 115, 105, 196, 131, 185, 39).map(_.toByte)
-    val s = unmetafy(bb)
-    assert(s == "dict 'obrazić się'")
-  }
-
-  test("unmetafying simple list") {
-    val bb = List(100, 105, 99, 116, 32, 39, 111, 98, 114, 97, 122, 105, 196, 131, 167, 32, 115, 105, 196, 131, 185, 39).map(_.toByte)
+    val bb = Array(
+      100, 105, 99, 116, 32, 39, 111, 98, 114, 97, 122, 105, 196, 131, 167, 32,
+      115, 105, 196, 131, 185, 39
+    ).map(_.toByte)
     val s = unmetafy(bb)
     assert(s == "dict 'obrazić się'")
   }

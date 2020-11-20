@@ -22,7 +22,7 @@ object Switch {
   implicit def switchToBoolean(s: Switch): Boolean = if (s == T) true else false
 }
 
-class Switch(value: Option[Boolean])
+case class Switch(value: Option[Boolean])
 
 
 /** This object provides a service of diffing two collections (Lists) of
