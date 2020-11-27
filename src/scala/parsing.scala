@@ -36,10 +36,12 @@ object Parsing {
   def toInputStream(s: String) =
     new java.io.ByteArrayInputStream(s.getBytes("UTF-8"))
 
+
   def normalize(s: String) = "\n" + s + "\n:"
 
   def normalize(s: java.io.InputStream) =
     streamConcat(toInputStream("\n"), s, toInputStream("\n:"))
+
 
   def parseHistory(s: String): Either[String, ResultData] = {
     parseHistory(toInputStream(normalize(s)))

@@ -37,9 +37,13 @@ object Transform {
 
 object Main extends App {
   try {
-    println("Downloading..."); Transfer.downloadHistoryFiles()
-    println("Processing...");  Dumping.dumpResultsToFile(Transform.processHistoryFiles())
-    println("Uploading...");   Transfer.uploadMergedHistory()
+    println("Downloading...");
+    val files = Transfer.downloadHistoryFiles()
+    println("Processing...");
+    Dumping.dumpResultsToFile(Transform.processHistoryFiles(files))
+    println("Uploading...");
+    Transfer.uploadMergedHistory()
+    println("done");
   } catch {
     case ex: Transfer.TransferError =>
       println()

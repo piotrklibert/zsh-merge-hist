@@ -14,9 +14,15 @@ case class Configuration(
   def getPathForHost(host: String) =
     s"${tempDir}/${host}_hist"
 
-  def createDir() = {
+  def connectionData(host: String) = {
     val dir = File(tempDir)
-    if (!dir.exists) { dir.createDirectory }
+    createDownloadDirectory()
+    (s"$host:${sourcePath}", getPathForHost(host))
+  }
+
+  def createDownloadDirectory() = {
+    val dir = File(tempDir)
+    if (!dir.exists) dir.createDirectory()
     dir
   }
 }
