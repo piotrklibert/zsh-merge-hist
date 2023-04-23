@@ -14,46 +14,48 @@ sourceSets {
     }
 }
 
-repositories { jcenter() }
+repositories { jcenter()
+    mavenCentral()
+}
 
 
 dependencies {
-    implementation 'com.chuusai:shapeless_2.13:2.3.3'
-    implementation 'com.fasterxml.jackson.module:jackson-module-scala_2.13:2.10.0'
-    implementation 'com.github.pathikrit:better-files_2.13:3.8.0'
-    implementation 'com.lihaoyi:ammonite-ops_2.13:1.7.4'
-    implementation 'com.lihaoyi:requests_2.13:0.2.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.9'
-    implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'org.scala-lang.modules:scala-parser-combinators_2.13:1.1.2'
-    implementation 'org.scala-lang.modules:scala-parallel-collections_2.13:0.2.0'
-    implementation 'org.scala-lang:scala-dist:2.13.1'
-    implementation 'org.scalaz:scalaz-core_2.13:7.3.0-M31'
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
-    implementation 'org.yaml:snakeyaml:1.25'
+    implementation 'com.chuusai:shapeless_2.13:2.3.10'
+    implementation 'com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.4'
+    implementation 'com.github.pathikrit:better-files_2.13:3.9.1'
+    implementation 'com.lihaoyi:ammonite-ops_2.13:2.4.1'
+    implementation 'com.lihaoyi:requests_2.13:0.7.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'org.scala-lang.modules:scala-parser-combinators_2.13:2.1.1'
+    implementation 'org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4'
+    implementation 'org.scala-lang:scala-dist:2.13.10'
+    implementation 'org.scalaz:scalaz-core_2.13:7.3.6'
+    implementation 'org.slf4j:slf4j-simple:2.0.3'
+    implementation 'org.yaml:snakeyaml:1.33'
 
     // https://mvnrepository.com/artifact/io.github.java-diff-utils/java-diff-utils
-    implementation "io.github.java-diff-utils:java-diff-utils:4.4"
-    implementation "com.github.nscala-time:nscala-time_2.13:2.22.0"
+    implementation 'io.github.java-diff-utils:java-diff-utils:4.12'
+    implementation 'com.github.nscala-time:nscala-time_2.13:2.32.0'
 
     // Unit tests
-    implementation 'org.pegdown:pegdown:1.4.2'
-    implementation 'org.scalatest:scalatest_2.13:3.0.8'
-    implementation 'org.scalactic:scalactic_2.13:3.0.8'
-    implementation 'org.scalacheck:scalacheck_2.13:1.14.1'
+    implementation 'org.pegdown:pegdown:1.6.0'
+    implementation 'org.scalatest:scalatest_2.13:3.2.14'
+    implementation 'org.scalactic:scalactic_2.13:3.2.14'
+    implementation 'org.scalacheck:scalacheck_2.13:1.17.0'
 
-    testImplementation 'org.pegdown:pegdown:1.4.2'
-    testImplementation 'org.scalatest:scalatest_2.13:3.0.8'
-    testImplementation 'org.scalactic:scalactic_2.13:3.0.8'
-    testImplementation 'org.scalacheck:scalacheck_2.13:1.14.1'
+    testImplementation 'org.pegdown:pegdown:1.6.0'
+    testImplementation 'org.scalatest:scalatest_2.13:3.2.14'
+    testImplementation 'org.scalactic:scalactic_2.13:3.2.14'
+    testImplementation 'org.scalacheck:scalacheck_2.13:1.17.0'
 }
 
 
 compileScala {
     // classpath = classpath.plus(files(compileGroovy.destinationDir))
     scalaCompileOptions.setAdditionalParameters([
-        "-Xlint:adapted-args,nullary-unit,inaccessible,nullary-override,infer-any,missing-interpolator,doc-detached,private-shadow,type-parameter-shadow,poly-implicit-overload,option-implicit,delayedinit-select,package-object-classes,stars-align,constant,nonlocal-return,implicit-not-found,serial,valpattern,eta-zero,eta-sam,deprecation",  // warns about unsed imports among other things
+        "-Xlint:adapted-args,inaccessible,nullary-override,infer-any,missing-interpolator,doc-detached,private-shadow,type-parameter-shadow,poly-implicit-overload,option-implicit,delayedinit-select,package-object-classes,stars-align,constant,nonlocal-return,implicit-not-found,serial,valpattern,eta-zero,eta-sam,deprecation",  // warns about unsed imports among other things
         "-feature",
         "-language:dynamics",
         "-language:higherKinds",
@@ -74,12 +76,13 @@ test {
     maxParallelForks = 1
 }
 
-tasks.build.dependsOn 'makeScripts'
+// tasks.build.dependsOn 'makeScripts'
 
 
 // ////////////////////////////////////////////////////////////////////////////////
 
 
+/*
 File mkfile(obj) { obj instanceof File ? obj : new File(obj.toString()) }
 task makeScripts(type: DefaultTask) {
     String shebang = "#! /usr/bin/env sh\n"
@@ -111,3 +114,4 @@ task makeScripts(type: DefaultTask) {
     outFile.write shebang + pre + "jshell --class-path ${jshell_cp.join(':')}\n"
     outFile.setExecutable(true, true)
 }
+*/

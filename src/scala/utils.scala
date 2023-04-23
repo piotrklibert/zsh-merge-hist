@@ -1,6 +1,5 @@
 package zsh.history
 
-
 object Storage {
   import better.files._
   import Configuration.config
@@ -17,8 +16,8 @@ object Switch {
   val F = new Switch(Some(false))
   val N = new Switch(None)
 
-  implicit def booleanToSwitch(b: Boolean) = new Switch(Some(b))
-  implicit def nullToSwitch(b: Null) = new Switch(None)
+  implicit def booleanToSwitch(b: Boolean): Switch = new Switch(Some(b))
+  implicit def nullToSwitch(b: Null): Switch = new Switch(None)
   implicit def switchToBoolean(s: Switch): Boolean = if (s == T) true else false
 }
 

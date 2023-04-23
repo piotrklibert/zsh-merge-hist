@@ -39,5 +39,7 @@ int main(int _argc, char *_argv[]) {
   assert(strlen(buf) == 2);
   assert((strcmp(buf, unmetafied) == 0));
 
+  free(buf);
+
   return EXIT_SUCCESS;
 }

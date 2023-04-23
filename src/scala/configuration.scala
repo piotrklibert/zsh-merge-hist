@@ -15,7 +15,6 @@ case class Configuration(
     s"${tempDir}/${host}_hist"
 
   def connectionData(host: String) = {
-    val dir = File(tempDir)
     createDownloadDirectory()
     (s"$host:${sourcePath}", getPathForHost(host))
   }
@@ -49,8 +48,10 @@ object Configuration {
   val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
 
-  def loadConfig =
-    mapper.readValue(settingsFile.toJava, classOf[Configuration])
+  def loadConfig = mapper.readValue(
+    settingsFile.toJava,
+    classOf[Configuration]
+  )
 
   if (!settingsFile.exists)
     throw new RuntimeException("No configuration file found!")

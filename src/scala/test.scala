@@ -1,11 +1,11 @@
 package zsh.history
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.Tag
 
 object Remote extends Tag("zsh.history.test.Remote")
 
-class TestMerging extends FunSuite {
+class TestMerging extends AnyFunSuite {
   import better.files._
   import Parsing.parseHistory
   import Transform.removeDuplicates
@@ -112,7 +112,7 @@ class TestMerging extends FunSuite {
 }
 
 
-class TestUnmetafy extends FunSuite {
+class TestUnmetafy extends AnyFunSuite {
   import Unmetafy.unmetafy
   import better.files._
 

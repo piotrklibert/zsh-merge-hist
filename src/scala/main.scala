@@ -11,14 +11,13 @@ object Transform {
   def removeDuplicates(lines: ResultData): ResultData =
     lines.sortBy(_._1).distinct // TODO: change to distinctBy(_._3) and fix the tests
 
-  def distinct(lines: ResultData): ResultData = {
+  def removeRepeatedCommands(lines: ResultData): ResultData =
     lines.reverse.distinctBy(_._3).reverse
-  }
 
   def processHistoryFiles(): ResultData =
     processHistoryPaths(config.hosts.map(config.getPathForHost))
 
-  def processHistoryPaths(files: List[String]) =
+  def processHistoryPaths(files: List[String]): ResultData =
     processHistoryFiles(files.map(File(_)))
 
   def processHistoryFiles(files: List[File]): ResultData = {
@@ -29,8 +28,7 @@ object Transform {
         val Right(parsed) = Parsing.parseHistory(inputString): @unchecked
         parsed
       })
-
-    distinct(removeDuplicates(List.concat(parsedFiles.toList: _*)))
+    removeRepeatedCommands(removeDuplicates(List.concat(parsedFiles.toList: _*)))
   }
 }
 
