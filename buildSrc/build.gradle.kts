@@ -20,22 +20,22 @@ repositories {
 
 }
 
-gradlePlugin {
-	plugins {
-		create("addRepos") {
-			id = "ts.setup.plugins.addRepos"
-			implementationClass = "ts.setup.plugins.Repositories"
-		}
-		create("mavenPush") {
-			id = "ts.setup.plugins.mavenPush"
-			implementationClass = "ts.setup.plugins.MavenPush"
-		}
-		create("android-library") {
-			id = "ts.setup.plugins.android-library"
-			implementationClass = "ts.setup.plugins.AndroidLibraryDefaults"
-		}
-	}
-}
+// gradlePlugin {
+// 	plugins {
+// 		create("addRepos") {
+// 			id = "ts.setup.plugins.addRepos"
+// 			implementationClass = "ts.setup.plugins.Repositories"
+// 		}
+// 		create("mavenPush") {
+// 			id = "ts.setup.plugins.mavenPush"
+// 			implementationClass = "ts.setup.plugins.MavenPush"
+// 		}
+// 		create("android-library") {
+// 			id = "ts.setup.plugins.android-library"
+// 			implementationClass = "ts.setup.plugins.AndroidLibraryDefaults"
+// 		}
+// 	}
+// }
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_1_8

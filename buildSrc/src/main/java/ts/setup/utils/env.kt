@@ -10,8 +10,8 @@ import java.util.*
 fun Project.requireEnv(key: String): String {
     val msg by lazy {
         """
-            The following environment variable is not set: $key 
-            Please set it in your CI environment or in the checkin.properties file. See 
+            The following environment variable is not set: $key
+            Please set it in your CI environment or in the zmh.properties file. See
             the README.md for more details.
         """.trimIndent()
     }
@@ -24,7 +24,7 @@ fun Project.requireEnvKeys(vararg keys: String): String {
     val msg by lazy {
         """
             None of the following environment variables are set: ${keys.joinToString(", ")}
-            Please set it in your CI environment or in the checkin.properties file. See 
+            Please set it in your CI environment or in the zmh.properties file. See
             the README.md for more details.
         """.trimIndent()
     }
@@ -43,7 +43,7 @@ fun Project.lookupEnvKeys(vararg keys: String): String? {
  * 2. The subproject properties
  * 3. The root project properties
  * 4. The gradle.properties file
- * 5. The checkin.properties file
+ * 5. The zmh.properties file
  * Return null if the value is not found. */
 fun Project.lookupEnv(key: String): String? {
     val value =
@@ -54,7 +54,7 @@ fun Project.lookupEnv(key: String): String? {
             // Then check the root project properties, which also includes values from the
             // gradle.properties file.
             ?: this.rootProject.extra.properties.lookupValue(key) as? String
-            // Finally check the checkin.properties file
+            // Finally check the zmh.properties file
             ?: this.checkProjectPropertiesFile(key)
             // If none of that worked, just give up
             ?: null
@@ -63,7 +63,7 @@ fun Project.lookupEnv(key: String): String? {
 
 private fun Project.checkProjectPropertiesFile(key: String): String? {
     try {
-        return this.rootProject.file("checkin.properties").inputStream().use {
+        return this.rootProject.file("zmh.properties").inputStream().use {
             Properties().apply { load(it) }.lookupValue(key) as? String
         }
     } catch (e: Exception) {
