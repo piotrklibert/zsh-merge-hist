@@ -8,7 +8,7 @@ import org.gradle.kotlin.dsl.task
 plugins {
     id("application")
     id("scala")
-    id("com.github.maiflai.scalatest") version "0.25"
+    // id("com.github.maiflai.scalatest") version "0.25"
     // id("java-toolchain")
 }
 
